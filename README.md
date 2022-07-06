@@ -1,2 +1,2 @@
-# SimpleCLogger
+# SimpleCppLogger
 Logger for C++

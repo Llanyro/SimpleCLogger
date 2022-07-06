@@ -16,6 +16,7 @@ class Logger {
 		const char* logger_folder_path;
 		unsigned int size;
 	private:
+		int __custom_log(const char* filename, const unsigned int filename_size, const char* format, void* arg_list) const;
 		int __custom_log(const char* filename, const char* format, void* arg_list) const;
 	public:
 		Logger(const char* logger_folder_path, const unsigned int size);

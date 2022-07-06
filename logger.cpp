@@ -26,12 +26,16 @@
 #include <unistd.h>
 #endif
 
+
+#define LOG "log.log"
+#define ERROR "error.log"
+#define INFO "info.log"
+
 namespace llcpp {
 namespace logger {
-int Logger::__custom_log(const char* filename, const char* format, void* arg_list) const {
+int Logger::__custom_log(const char* filename, const unsigned int filename_size, const char* format, void* arg_list) const {
 	int done = 0;
 
-	unsigned int filename_size = strlen(filename);
 	unsigned int size = filename_size + this->size + 2;
 	char* path = new char[size];
 
@@ -61,6 +65,9 @@ int Logger::__custom_log(const char* filename, const char* format, void* arg_lis
 	delete[] path;
 	return done;
 }
+int Logger::__custom_log(const char* filename, const char* format, void* arg_list) const {
+	return this->__custom_log(filename, strlen(filename), format, arg_list);
+}
 
 Logger::Logger(const char* logger_folder_path, const unsigned int size) {
 	this->logger_folder_path = logger_folder_path;
@@ -77,41 +84,32 @@ Logger::Logger(const char* logger_folder_path, const unsigned int size) {
 Logger::Logger(const char* logger_folder_path) : Logger(logger_folder_path, strlen(logger_folder_path)) {}
 Logger::~Logger() {}
 int Logger::custom_log(const char* filename, const char* format, ...) const {
-	int done = 0;
-
-	unsigned int filename_size = strlen(filename);
-	unsigned int size = filename_size + this->size + 2;
-	char* path = new char[size];
-
-	// Concat strings
-	memcpy(path, this->logger_folder_path, this->size);
-	path[this->size] = '/';
-	memcpy(path + this->size + 1, filename, filename_size);
-	path[size - 1] = '\0';
-
-	FILE* f = fopen(path, "a+");
+	int done;
 	va_list arg;
 	va_start(arg, format);
-
-	#if defined(_WIN32)
-	done = vfprintf(f, format, arg);
-	#elif defined(__unix__)
-	done = __vfprintf_internal(f, format, arg, 0);
-	#endif
-
-	if (done > 0) {
-		putc('\n', f);
-		done++;
-	}
-
-	fclose(f);
-
-	va_end(arg);
-	delete[] path;
+	done = this->__custom_log(filename, format, arg);
+	return done;
+}
+int Logger::log(const char* format, ...) const {
+	int done;
+	va_list arg;
+	va_start(arg, format);
+	done = this->__custom_log(LOG, sizeof(LOG), format, arg);
+	return done;
+}
+int Logger::error(const char* format, ...) const {
+	int done;
+	va_list arg;
+	va_start(arg, format);
+	done = this->__custom_log(ERROR, sizeof(ERROR), format, arg);
 	return done;
 }
 int Logger::info(const char* format, ...) const {
-	return 0;
+	int done;
+	va_list arg;
+	va_start(arg, format);
+	done = this->__custom_log(INFO, sizeof(INFO), format, arg);
+	return done;
 }
 
 } /* namespace logger */
