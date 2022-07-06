@@ -2,8 +2,10 @@
 Simple logger for C++
 
 #Status
-	- Windows(OK)
-	- Unix(Not tested)
+```
+- Windows(OK)
+- Unix(Not tested)
+```
 
 #Use example
 ```
