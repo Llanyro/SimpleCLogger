@@ -33,10 +33,10 @@
 
 namespace llcpp {
 namespace logger {
-int Logger::__custom_log(const char* filename, const unsigned int filename_size, const char* format, void* arg_list) const {
+int Logger::__custom_log(const char* filename, const len_t filename_size, const char* format, void* arg_list) const {
 	int done = 0;
 
-	unsigned int size = filename_size + this->size + 2;
+	len_t size = filename_size + this->size + 2;
 	char* path = new char[size];
 
 	// Concat strings
@@ -69,7 +69,7 @@ int Logger::__custom_log(const char* filename, const char* format, void* arg_lis
 	return this->__custom_log(filename, strlen(filename), format, arg_list);
 }
 
-Logger::Logger(const char* logger_folder_path, const unsigned int size) {
+Logger::Logger(const char* logger_folder_path, const len_t size) {
 	this->logger_folder_path = logger_folder_path;
 	this->size = size;
 
