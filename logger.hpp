@@ -8,7 +8,7 @@
 #ifndef LOGGER_LOGGER_HPP_
 #define LOGGER_LOGGER_HPP_
 
-#include "llcppheaders/llanytypeslib.hpp"
+#include "llanytypeslib.hpp"
 
 namespace llcpp {
 namespace logger {
